@@ -1,0 +1,45 @@
+1. Find total billing per patient.
+2. Rank patients by total medical bill using DENSE_RANK.
+3. Find the average bill per diagnosis.
+4. Show diagnoses with total bills above 200.
+5. Find patients who visited more than once.
+
+
+SELECT * 
+FROM work_hospital_visits;
+
+1.SELECT
+patient_id,
+SUM(bill_amount) AS total_bill
+FROM work_hospital_visits
+GROUP BY patient_id;
+
+2.SELECT
+patient_id,
+SUM(bill_amount) AS total_bill,
+DENSE_RANK() OVER(ORDER BY SUM(bill_amount) DESC) AS ranking
+FROM work_hospital_visits
+GROUP BY patient_id;
+
+3.SELECT
+diagnosis,
+AVG(bill_amount) average_bill
+FROM work_hospital_visits
+GROUP BY diagnosis
+ORDER BY AVG(bill_amount) DESC;
+
+4.SELECT
+diagnosis,
+SUM(bill_amount) AS total_bill
+FROM work_hospital_visits
+GROUP BY diagnosis
+HAVING SUM(bill_amount) > 200;
+
+5.SELECT
+patient_id,
+COUNT(visit_date) AS visitation_days
+FROM work_hospital_visits
+GROUP BY patient_id
+HAVING COUNT(visit_date) > 1;
+
+
